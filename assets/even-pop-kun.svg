@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     version="1.0"
+     width="36"
+     height="36">
+    <defs>
+        <clipPath id="cut-off-center">
+            <rect x="0" y="13" width="36" height="10" />
+        </clipPath>
+    </defs>
+     <circle cx="18" cy="18" r="15" fill="blue"></circle>
+     <circle cx="18" cy="18" r="15" fill="white" clip-path="url(#cut-off-center)"></circle>
+</svg>

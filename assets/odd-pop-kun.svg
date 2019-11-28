@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     version="1.0"
+     width="46"
+     height="36">
+    <defs>
+        <clipPath id="cut-off-center">
+            <rect x="0" y="13" width="46" height="10" />
+        </clipPath>
+    </defs>
+    <ellipse cx="23" cy="18" rx="20" ry="15" fill="red"></ellipse>
+    <ellipse cx="23" cy="18" rx="20" ry="15" fill="white" clip-path="url(#cut-off-center)"></ellipse>
+</svg>
