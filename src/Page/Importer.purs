@@ -1,7 +1,6 @@
 module Hiyamugi.Page.Importer where
 
 import Prelude
-
 import Data.Const (Const)
 import Data.Maybe (Maybe(..))
 import Effect.Aff.Class (class MonadAff)
@@ -16,25 +15,27 @@ import Hiyamugi.Data.Route (Route(..))
 data Action
   = Initialize
 
-type State =
-  {}
+type State
+  = {}
 
-component
-  :: forall m r
-  . MonadAff m
-  => Navigate m
-  => H.Component HH.HTML (Const Void) {} Void m
-component = H.mkComponent
-  { initialState
-  , render
-  , eval: H.mkEval $ H.defaultEval
-    { handleAction = handleAction
-    , initialize = Just Initialize
+component ::
+  forall m r.
+  MonadAff m =>
+  Navigate m =>
+  H.Component HH.HTML (Const Void) {} Void m
+component =
+  H.mkComponent
+    { initialState
+    , render
+    , eval:
+      H.mkEval
+        $ H.defaultEval
+            { handleAction = handleAction
+            , initialize = Just Initialize
+            }
     }
-  }
   where
-  initialState _ =
-    {}
+  initialState _ = {}
 
   handleAction :: Action -> H.HalogenM State Action () Void m Unit
   handleAction = case _ of
@@ -43,10 +44,23 @@ component = H.mkComponent
 
   render :: State -> H.ComponentHTML Action () m
   render state =
-    HH.div_
-      [ header Importer
-      , mainView state
-      , footer
+    HH.section
+      [ css "section" ]
+      [ HH.div
+          [ css "container" ]
+          [ header Importer
+          , HH.div
+              [ css "" ]
+              [ HH.div
+                  [ css "" ]
+                  [ HH.div
+                      [ css "" ]
+                      [ mainView state
+                      ]
+                  ]
+              ]
+          , footer
+          ]
       ]
 
   mainView :: forall props. State -> HH.HTML props Action

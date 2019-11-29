@@ -1,7 +1,6 @@
 module Hiyamugi.Page.Home where
 
 import Prelude
-
 import Data.Const (Const)
 import Data.Maybe (Maybe(..))
 import Effect.Aff.Class (class MonadAff)
@@ -16,25 +15,27 @@ import Hiyamugi.Data.Route (Route(..))
 data Action
   = Initialize
 
-type State =
-  {}
+type State
+  = {}
 
-component
-  :: forall m r
-  . MonadAff m
-  => Navigate m
-  => H.Component HH.HTML (Const Void) {} Void m
-component = H.mkComponent
-  { initialState
-  , render
-  , eval: H.mkEval $ H.defaultEval
-    { handleAction = handleAction
-    , initialize = Just Initialize
+component ::
+  forall m r.
+  MonadAff m =>
+  Navigate m =>
+  H.Component HH.HTML (Const Void) {} Void m
+component =
+  H.mkComponent
+    { initialState
+    , render
+    , eval:
+      H.mkEval
+        $ H.defaultEval
+            { handleAction = handleAction
+            , initialize = Just Initialize
+            }
     }
-  }
   where
-  initialState _ =
-    {}
+  initialState _ = {}
 
   handleAction :: Action -> H.HalogenM State Action () Void m Unit
   handleAction = case _ of
@@ -43,33 +44,28 @@ component = H.mkComponent
 
   render :: State -> H.ComponentHTML Action () m
   render state =
-    HH.div_
-      [ header Home
-      , HH.div
-        [ css "home-page" ]
-        [ HH.div
-          [ css "container css" ]
-          [ HH.div
-            [ css "row" ]
-            [ mainView state
-            , HH.div
-              [ css "col-md-3" ]
+    HH.section
+      [ css "section" ]
+      [ HH.div
+          [ css "container" ]
+          [ header Home
+          , HH.div
+              [ css "home-page" ]
               [ HH.div
-                [ css "sidebar" ]
-                [ HH.p_
-                  [ HH.text "Foo" ]
-                -- , renderFoo
-                ]
+                  [ css "container css" ]
+                  [ HH.div
+                      [ css "row" ]
+                      [ mainView state
+                      ]
+                  ]
               ]
-            ]
+          , footer
           ]
-        ]
-      , footer
       ]
 
   mainView :: forall props. State -> HH.HTML props Action
   mainView state =
     HH.div
       [ css "col-md-9" ]
-      [ -- musicList state.music 
+      [ -- musicList state.music  HH.text "home"
       ]

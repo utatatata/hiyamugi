@@ -1,8 +1,8 @@
 module Hiyamugi.Component.Utils where
 
 import Prelude
-
 import Data.Const (Const)
 import Halogen as H
 
-type OpaqueSlot = H.Slot (Const Void) Void
+type OpaqueSlot
+  = H.Slot (Const Void) Void
