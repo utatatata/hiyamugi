@@ -3,13 +3,17 @@ module Hiyamugi.Data.PMS where
 import Prelude
 import Control.Alt ((<|>))
 import Data.Array as A
+import Data.Array.Extra as AE
+import Data.Char.Unicode.Extra (isNewline)
+import Data.Either (Either)
 import Data.Foldable (foldl)
 import Data.Maybe (Maybe(..), maybe)
-import Data.String.CodeUnits (fromCharArray)
-import Text.Parsing.Parser (Parser, fail)
+import Data.String.CodeUnits (fromCharArray, toCharArray)
+import Data.Traversable (traverse)
+import Text.Parsing.Parser (ParseError, Parser, fail, runParser)
 import Text.Parsing.Parser.Combinators (many1Till)
 import Text.Parsing.Parser.String (anyChar, eof, string)
-import Text.Parsing.Parser.String.Extra (caseString, newline, spaces1)
+import Text.Parsing.Parser.String.Extra (caseString, spaces1)
 import Text.Parsing.Parser.Token.Extra (hexInteger, hexIntegerWithLength, integer, integerWithLength)
 
 type PMS
@@ -129,9 +133,21 @@ fromIntObjectChannel 7 = Just Button7
 
 fromIntObjectChannel _ = Nothing
 
+parse :: String -> Either ParseError (Array Command)
+parse source =
+  source
+    # toCharArray
+    # AE.split isNewline
+    # A.filter ((maybe false ((_ == '#') <<< _.head)) <<< A.uncons)
+    # traverse (flip runParser command <<< fromCharArray)
+
 command :: Parser String Command
 command =
-  player <|> genre <|> title <|> artist <|> bpm
+  player
+    <|> genre
+    <|> title
+    <|> artist
+    <|> bpm
     <|> midifile
     <|> playLevel
     <|> rank
@@ -176,7 +192,7 @@ command =
   stringCmd :: forall a. String -> (String -> a) -> Parser String a
   stringCmd name constructor =
     cmd name do
-      s <- fromCharArray <<< A.fromFoldable <$> many1Till anyChar (void newline <|> eof)
+      s <- fromCharArray <<< A.fromFoldable <$> many1Till anyChar eof
       pure $ constructor s
 
   player :: Parser String Command
